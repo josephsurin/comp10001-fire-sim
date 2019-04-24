@@ -2,6 +2,7 @@
 
 ```
 usage: gen_sim [-h] [-d DURATION] [-m MODEL] [-f FILE] [-D DIR] [-o OUTFILE]
+               [-r RANDOM]
 
 Fire simulator animation generator
 
@@ -9,6 +10,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -d DURATION, --duration DURATION
                         Duration for each frame of the gif in milliseconds
+                        (default 500)
   -m MODEL, --model MODEL
                         A string representing the model. e.g. "[[2, 2], [2,
                         2]], [[1, 1], [1, 1]], 1, 'N', [(0, 0)]"
@@ -17,4 +19,6 @@ optional arguments:
   -D DIR, --dir DIR     A directory to save output files to
   -o OUTFILE, --outfile OUTFILE
                         Output .gif file
+  -r RANDOM, --random RANDOM
+                        Number of random models to generate animations for
 ```

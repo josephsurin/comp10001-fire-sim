@@ -4,7 +4,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Fire simulator animation generator')
 parser.add_argument('-d', '--duration', type=int, default=500,
-        help='Duration for each frame of the gif in milliseconds')
+        help='Duration for each frame of the gif in milliseconds (default 500)')
 parser.add_argument('-m', '--model', type=str,
         help='A string representing the model. e.g. "[[2, 2], [2, 2]], [[1, 1], [1, 1]], 1, \'N\', [(0, 0)]"')
 parser.add_argument('-f', '--file', type=str,
@@ -13,14 +13,16 @@ parser.add_argument('-D', '--dir', type=str, default='./',
         help='A directory to save output files to')
 parser.add_argument('-o', '--outfile', type=str,
         help='Output .gif file')
+parser.add_argument('-r', '--random', type=int, default=1,
+        help='Generate random models')
 
 args = parser.parse_args()
 
-if not (args.model or args.file):
-    print('Specify at least one of model or file')
+if not (args.model or args.file or args.random):
+    print('Specify at least one of model or file or random')
     exit()
 
-from fire_sim import generate_sim
+from fire_sim import generate_sim, random_model
 from uuid import uuid1
 import os
 
@@ -54,3 +56,10 @@ if args.file:
             filename = filename + '.gif' if not filename.endswith('.gif') else filename
             f_grid, h_grid, i_threshold, w_direction, burn_seeds = eval(model)
             gen_sim(f_grid, h_grid, i_threshold, w_direction, burn_seeds, args.duration, save_dir + filename)
+    exit()
+
+if args.random:
+    for _ in range(args.random):
+        filename = uuid1().hex + '.gif'
+        f_grid, h_grid, i_threshold, w_direction, burn_seeds = random_model()
+        gen_sim(f_grid, h_grid, i_threshold, w_direction, burn_seeds, args.duration, save_dir + filename)

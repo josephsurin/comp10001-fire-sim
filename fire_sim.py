@@ -64,3 +64,14 @@ def generate_sim(f_grid, h_grid, i_threshold, w_direction, burn_seeds, duration,
     states = run_model(f_grid, h_grid, i_threshold, w_direction, burn_seeds)
     frames = [draw_state(s[0], h_grid, s[1],  s[2], t, w_direction, i_threshold) for t,s in enumerate(states)]
     frames[0].save(outfile, save_all=True, append_images=frames[1:], duration=duration, loop=0)
+
+import random
+
+def random_model(max_size=50, max_fuel=10, max_height=6):
+    size = random.randint(2, max_size)
+    f_grid = [[random.randint(0, max_fuel) for _ in range(size)] for _ in range(size)]
+    h_grid = [[random.randint(1, max_height) for _ in range(size)] for _ in range(size)]
+    i_threshold = random.randint(1, 8)
+    w_direction = random.choice([None, 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'])
+    burn_seeds = random.sample([(i, j) for i in range(size) for j in range(size)], random.randint(size//3, size//1.2))
+    return (f_grid, h_grid, i_threshold, w_direction, burn_seeds)
