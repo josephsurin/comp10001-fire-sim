@@ -1,0 +1,56 @@
+#!/usr/bin/python
+
+import argparse
+
+parser = argparse.ArgumentParser(description='Fire simulator animation generator')
+parser.add_argument('-d', '--duration', type=int, default=500,
+        help='Duration for each frame of the gif in milliseconds')
+parser.add_argument('-m', '--model', type=str,
+        help='A string representing the model. e.g. "[[2, 2], [2, 2]], [[1, 1], [1, 1]], 1, \'N\', [(0, 0)]"')
+parser.add_argument('-f', '--file', type=str,
+        help='A filename containing output filenames (optional) and models (one per line) of the form filename:model')
+parser.add_argument('-D', '--dir', type=str, default='./',
+        help='A directory to save output files to')
+parser.add_argument('-o', '--outfile', type=str,
+        help='Output .gif file')
+
+args = parser.parse_args()
+
+if not (args.model or args.file):
+    print('Specify at least one of model or file')
+    exit()
+
+from fire_sim import generate_sim
+from uuid import uuid1
+import os
+
+def gen_sim(f_grid, h_grid, i_threshold, w_direction, burn_seeds, duration, save_path):
+    try:
+        print('Generating animation:', save_path)
+        generate_sim(f_grid, h_grid, i_threshold, w_direction, burn_seeds, duration, save_path)
+    except:
+        print('An error occured trying to generate animation for', save_path)
+
+
+save_dir = args.dir + ('/' if args.dir[-1] != '/' else '')
+
+if args.model:
+    outfile = args.outfile if args.outfile else uuid1().hex + '.gif'
+    f_grid, h_grid, i_threshold, w_direction, burn_seeds = eval(args.model)
+    gen_sim(f_grid, h_grid, i_threshold, w_direction, burn_seeds, args.duration, save_dir + outfile)
+    exit()
+
+if args.file:
+    if not os.path.isfile(args.file):
+        print('Provided file does not exist.')
+        exit()
+    with open(args.file) as f:
+        for line in f.readlines():
+            params = line.split(':')
+            if len(params) != 2:
+                print('Input must be in the form filename:model')
+                continue
+            filename, model = params
+            filename = filename + '.gif' if not filename.endswith('.gif') else filename
+            f_grid, h_grid, i_threshold, w_direction, burn_seeds = eval(model)
+            gen_sim(f_grid, h_grid, i_threshold, w_direction, burn_seeds, args.duration, save_dir + filename)
