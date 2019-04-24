@@ -2,7 +2,21 @@
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Fire simulator animation generator')
+ex = '''
+examples:
+
+basic usage
+    python gen_test --model "[[2,2],[2,2]],[[1,1],[1,1]],1,\'N\',[(0,0)]" --outfile out.gif --duration 1000
+
+generate 5 random animations in a directory named random
+    python gen_test --random 5 -D ./random/
+
+from a file
+    python gen_test --file in.txt -D ./out/
+
+'''
+
+parser = argparse.ArgumentParser(description='Fire simulator animation generator', epilog=ex, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument('-d', '--duration', type=int, default=500,
         help='Duration for each frame of the gif in milliseconds (default 500)')
 parser.add_argument('-m', '--model', type=str,
