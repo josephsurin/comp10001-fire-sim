@@ -73,5 +73,6 @@ def random_model(max_size=50, max_fuel=10, max_height=6):
     h_grid = [[random.randint(1, max_height) for _ in range(size)] for _ in range(size)]
     i_threshold = random.randint(1, 8)
     w_direction = random.choice([None, 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'])
-    burn_seeds = random.sample([(i, j) for i in range(size) for j in range(size)], random.randint((size*size)//3, (size*size)//1.5))
+    fl_coords = [(i, j) for i in range(size) for j in range(size) if f_grid[i][j]]
+    burn_seeds = random.sample(fl_coords, random.randint(len(fl_coords)//3, len(fl_coords)//1.75))
     return (f_grid, h_grid, i_threshold, w_direction, burn_seeds)
